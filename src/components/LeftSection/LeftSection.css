@@ -1,0 +1,105 @@
+.left-section{
+  position: sticky;
+  top: 0px;
+  border-right: 1px solid #ddd;
+  min-width: 16rem;
+  z-index: 1;
+}
+
+.left-section .item{
+  letter-spacing: 0px;
+  font-size: larger;
+  /* font-weight: 700; */
+}
+.left-section .item:first-of-type{ color: var(--primary-theme-color); }
+.left-section .item.active{
+  font-weight: bold;
+}
+.left-section .item .item-row{
+  padding: 0.5rem;
+  border-radius: 2rem;
+}
+.left-section .item:hover .item-row{
+  background-color: #f0f0f0;
+}
+.left-section .item .item-row span{
+  padding: 0px 1rem;
+}
+
+@media screen and (max-width: 1024px) {
+  .left-section{
+    max-width: 4rem;
+    min-width: 4rem;
+  }
+  .left-section .item{
+    justify-content: center;
+    user-select: none;
+  }
+  .left-section .item.tweet-item button{
+    font-size: 0.5rem;
+  }
+  .left-section .item.tweet-item button span{
+    display: none;
+    bottom: 100%;
+    left: unset;
+  }
+  .left-section .item .item-row span{
+    position: absolute;
+    left: 100%;
+    display: none;
+    margin: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: #f0f0f0;
+    box-shadow: 0px 0px 0.25rem #0004;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  .left-section .item:hover .item-row span{
+    display: block;
+    font-size: small;
+    color: #222;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .left-section{
+    top: calc(100% - 4rem);
+    bottom: 0px;
+    min-width: unset;
+    max-width: unset;
+    width: 100%;
+    height: auto;
+    backdrop-filter: blur(10px);
+    background-color: #fffd;
+    border-top: 1px solid #ddd;
+    order: 1;
+  }
+  .left-section .items.container{
+    flex-direction: row;
+    z-index: 1;
+  }
+  .left-section .item:first-child{
+    display: none;
+  }
+  .left-section .item.tweet-item{
+    position: fixed;
+    bottom: 4rem;
+    right: 0.5rem;
+    width: auto;
+    z-index: -1;
+  }
+  .left-section .item.tweet-item button{
+    box-shadow: 0px 0px 0.5rem #0004;
+  }
+  .left-section .item .item-row span{
+    bottom: 100%;
+    left: unset;
+  }
+  .left-section .item:active .item-row span{
+    display: block;
+    font-size: small;
+    color: #222;
+  }
+}

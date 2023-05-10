@@ -1,0 +1,37 @@
+button.action{
+  --accent-rgb: var(--primary-theme-rgb);
+  gap: 0.25rem;
+  margin: 0px -0.75rem;
+  padding: 0px;
+  color: #888;
+  background-color: transparent;
+  border-radius: 0px;
+  font-weight: 400;
+  font-size: smaller;
+  cursor: pointer;
+  transition: 150ms ease-in color;
+}
+
+button.action.colored{ color: rgb(var(--accent-rgb)); }
+
+button.action.green{ --accent-rgb: 16, 185, 129; }
+button.action.pink{ --accent-rgb: 236, 72, 153; }
+
+button.action .text{
+  margin-right: 0.75rem;
+  text-align: left;
+}
+
+button.action .icon{
+  padding: 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  font-size: 1rem;
+  transition: 150ms ease-in all;
+}
+button.action:hover{
+  color: rgb(var(--accent-rgb));
+}
+button.action:hover .icon{
+  background-color: rgba(var(--accent-rgb), 0.1);
+}

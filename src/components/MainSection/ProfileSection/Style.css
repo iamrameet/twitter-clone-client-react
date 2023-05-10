@@ -1,0 +1,48 @@
+header.profile-header{
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.25rem 1rem;
+}
+
+header.profile-header p{
+  font-size: smaller;
+  color: #666;
+  line-height: 1rem;
+}
+
+.profile-details .cover{
+  height: 14rem;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-image: url("https://pbs.twimg.com/profile_banners/20536157/1681315865/1080x360");
+}
+
+.profile-details .image{
+  margin-top: -6rem;
+  width: 10rem;
+  height: 10rem;
+  background-color: #fff;
+  border-radius: 0.75rem;
+}
+.profile-details .buttons{
+  margin-left: auto;
+}
+
+.profile-content{
+  min-height: 60%;
+  align-items: center;
+}
+
+.profile-content .zero-results{
+  width: 60%;
+}
+.profile-content .zero-results h1{
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 2.4rem;
+}
+.profile-content .zero-results p{
+  padding: 0.5rem 0px;
+  color: #000a;
+}

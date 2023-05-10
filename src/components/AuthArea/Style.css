@@ -1,0 +1,61 @@
+.auth-form{
+  max-width: 360px;
+}
+.dialog .content h1{
+  margin-bottom: 2rem;
+}
+.dialog .content .container.input{
+  position: relative;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: 150ms ease-out all;
+}
+.dialog .content .container.input label{
+  position: absolute;
+  top: 0px;
+  font-size: smaller;
+  color: var(--primary-theme-color);
+  transition: 150ms ease-out all;
+}
+.dialog .content .container.input:not(:focus-within) input label{
+  top: 0.5rem;
+  line-height: 2rem;
+  font-size: medium;
+  color: #888;
+}
+.dialog .content .container.input input{
+  margin-top: 0px;
+  height: 2rem;
+  line-height: 2rem;
+  font-size: medium;
+  transition: 150ms ease-out all;
+}
+.dialog .content .container.input input::placeholder{
+  color: transparent;
+}
+.dialog .content .container.input:focus-within{
+  padding-bottom: 0.25rem;
+  padding-top: 0.75rem;
+}
+.dialog .content .container.input input:not(:empty){
+  margin-top: 0.5rem;
+  height: 1.5rem;
+  line-height: 2rem;
+}
+
+@media screen and (max-width: 768px) {
+  .auth-form{
+    padding: 1rem;
+    max-width: unset;
+    width: 100%;
+  }
+  .auth-form h1{
+    font-size: 1.7rem;
+  }
+  /* .dialog header{
+    position: sticky;
+    top: 0px;
+    background-color: inherit;
+  } */
+}

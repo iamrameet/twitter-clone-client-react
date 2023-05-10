@@ -1,0 +1,61 @@
+.tweet-area{
+  min-width: 500px;
+}
+
+.tweet-area textarea{
+  width: 100%;
+  resize: vertical;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  outline: none;
+}
+.tweet-area textarea::selection{
+  color: var(--primary-text-color);
+  background-color: var(--primary-theme-color);
+}
+
+.tweet-area .right-side{
+  padding: 0px 1rem;
+  width: calc(100% - 3rem);
+}
+.tweet-area .bottom-area{
+  align-items: flex-start;
+  margin-left: 3.5rem;
+}
+
+.tweet-area .image{
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background-image: url("https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.preview-images{
+  height: 30vh;
+}
+
+.preview-images .preview-image{
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 1rem;
+}
+
+.DraftEditor-root{
+  width: 100%;
+}
+
+@media screen and (max-width: 768px) {
+  .tweet-area{
+    min-width: unset;
+    padding: 0px;
+    height: 100%;
+  }
+  .tweet-area .bottom-area{
+    margin-left: 0rem;
+  }
+}

@@ -1,0 +1,48 @@
+.tweet-post{
+  padding: 1rem 1rem 0px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+:is(.tweet-post, .account-post) .image{
+  width: 3rem;
+  height: 3rem;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background-image: url("https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.tweet-post .media{
+  /* display: flex; */
+  width: 100%;
+  max-width: 420px;
+  border-radius: 1rem;
+  border: 1px solid #ddd;
+}
+
+.tweet-post .actions{ padding: 0.5rem 0px; }
+
+.tweet-post .top-info{
+  margin-top: -0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.tweet-post .text-line{
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-shrink: 1;
+}
+
+.tweet-post .text-line .text{
+  white-space: nowrap;
+}
+.tweet-post .text-line .ellipsis{
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.tweet-post .content-area{
+  width: calc(100% - 7.25rem);
+}

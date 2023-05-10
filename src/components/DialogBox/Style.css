@@ -1,0 +1,28 @@
+.dialog{
+  position: relative;
+  max-width: 720px;
+  z-index: 1;
+}
+.dialog header{
+  margin-bottom: auto;
+}
+.dialog header button.icon:first-of-type{
+  margin-right: auto;
+}
+
+.dialog .content{
+  padding: 0rem 3rem;
+  gap: 1rem;
+  width: 100%;
+  overflow: auto;
+}
+
+@media screen and (max-width: 768px) {
+  .dialog{
+    max-width: 100%;
+    height: 100%;
+  }
+  .dialog .content{
+    padding: 0px 1rem;
+  }
+}
