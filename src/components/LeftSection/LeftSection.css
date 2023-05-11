@@ -11,6 +11,9 @@
   font-size: larger;
   /* font-weight: 700; */
 }
+.left-section .item:last-child{
+  margin-top: auto;
+}
 .left-section .item:first-of-type{ color: var(--primary-theme-color); }
 .left-section .item.active{
   font-weight: bold;

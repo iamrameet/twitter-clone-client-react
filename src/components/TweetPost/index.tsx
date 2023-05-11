@@ -57,21 +57,25 @@ export default function TweetPost(props: TweetContentProperties){
 
   const tweetContent: (string | JSX.Element)[] = [];
 
-  const matchArray = Array.from(props.tweet.content.matchAll(/(#|@)\w+/g));
-  let index = 0;
-  let count = 0;
-  for(const hashtag of matchArray){
-    const hashtagIndex = hashtag.index ?? 0;
-    const beforeString = props.tweet.content.substring(index, hashtagIndex);
-    const hashtagString = props.tweet.content.substring(hashtagIndex, hashtagIndex + hashtag[0].length);
-    tweetContent.push(beforeString, <NavLink
-      key={ count++ }
-      className="link"
-      to={ (hashtag[0][0] === "#" ? "/search?type=hashtag&q=" : "/") + hashtagString.substring(1) }
-    >{ hashtagString }</NavLink>);
-    index = hashtagIndex + hashtag[0].length;
+  if(props.tweet.content){
+    const matchArray = Array.from(props.tweet.content.matchAll(/(#|@)\w+/g) ?? []);
+    let index = 0;
+    let count = 0;
+    for(const hashtag of matchArray){
+      const hashtagIndex = hashtag.index ?? 0;
+      const beforeString = props.tweet.content.substring(index, hashtagIndex);
+      const hashtagString = props.tweet.content.substring(hashtagIndex, hashtagIndex + hashtag[0].length);
+      tweetContent.push(beforeString, <NavLink
+        key={ count++ }
+        className="link"
+        to={ (hashtag[0][0] === "#" ? "/search?type=hashtag&q=" : "/") + hashtagString.substring(1) }
+      >{ hashtagString }</NavLink>);
+      index = hashtagIndex + hashtag[0].length;
+    }
+    tweetContent.push(props.tweet.content.substring(index));
+  } else {
+    tweetContent.push("");
   }
-  tweetContent.push(props.tweet.content.substring(index));
 
   return <div className="container w-fill row gap hover tweet-post">
 
@@ -84,7 +88,7 @@ export default function TweetPost(props: TweetContentProperties){
         : <></>
       }
       <div className="box image" style={{
-        backgroundImage: `url("${ props.user.image ?? "https://abs.twimg.com/sticky/default_profile_images/default_profile_bigger.png" }")`
+        backgroundImage: `url("${ props.user.image }")`
       }}></div>
     </div>
 
@@ -119,7 +123,7 @@ export default function TweetPost(props: TweetContentProperties){
         { tweetContent }
         {
           props.tweet.attachments.map(attachment => <img
-            src={ "https://twitter-clone-excs.onrender.com/" + attachment.url }
+            src={ FetchRequest.host + attachment.url }
             alt=""
             className="container media"
           />)

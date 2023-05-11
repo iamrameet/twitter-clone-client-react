@@ -10,21 +10,29 @@ header.profile-header p{
   line-height: 1rem;
 }
 
-.profile-details .cover{
+.profile-details .cover,
+#edit-profile .cover{
   height: 14rem;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url("https://pbs.twimg.com/profile_banners/20536157/1681315865/1080x360");
+  background-color: #eee;
 }
+#edit-profile .cover{ height: 8rem; }
 
-.profile-details .image{
+.profile-details .image,
+#edit-profile .image{
   margin-top: -6rem;
   width: 10rem;
   height: 10rem;
   background-color: #fff;
   border-radius: 0.75rem;
 }
+#edit-profile .image{
+  width: 6rem;
+  height: 6rem;
+}
+
 .profile-details .buttons{
   margin-left: auto;
 }
@@ -45,4 +53,14 @@ header.profile-header p{
 .profile-content .zero-results p{
   padding: 0.5rem 0px;
   color: #000a;
+}
+
+#edit-profile{
+  align-items: flex-start;
+  padding: 0px;
+  min-width: 420px;
+}
+#edit-profile .edit-profile{
+  background-color: red;
+  border-radius: inherit;
 }

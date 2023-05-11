@@ -8,6 +8,7 @@ import { UserResponse } from "../../../helper/user";
 import { UserContext } from "../../context/AuthUser";
 import { ImageSelectProvider } from "../../TweetArea/ImageSelect";
 import Tabs from "../../Tabs";
+import { DEFAULT_IMAGE } from "../../../scripts/user";
 
 type HomeSectionProperties = {
   tweets?: MappedTweet[];
@@ -50,7 +51,7 @@ export default function HomeSection(props: HomeSectionProperties){
       isLiked: tweet.isLiked ?? false,
       isRetweeted: tweet.isRetweeted ?? false,
       retweetOfId: tweet.retweetOfId ?? undefined,
-      user: { ...userData, image: userData.image }
+      user: { ...userData, image: userData.image ?? DEFAULT_IMAGE }
     }, ...tweets]);
   }
 

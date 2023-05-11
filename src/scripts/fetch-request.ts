@@ -122,7 +122,12 @@ type EndPointReturnType<M extends keyof EndPointResponseMap, U extends keyof End
 
 export default class FetchRequest{
 
-  static #host = "https://twitter-clone-excs.onrender.com/api";
+  static #host = "http://localhost/" as const;
+  // static #host = "https://twitter-clone-excs.onrender.com/";
+  static #APIHost = this.#host + "api";
+  static get host(){
+    return this.#host;
+  }
 
   static #parsePathWithParams(path: string, fields: { [field: string]: string | number | boolean }){
     for(const key in fields){
@@ -148,7 +153,7 @@ export default class FetchRequest{
     return new Promise((resolve, reject) => {
       let path = this.#parsePathWithParams(endPoint, paramFields ?? {});
       path = this.#parsePathWithQueries(path, queryFields ?? {});
-      fetch(this.#host + path, {
+      fetch(this.#APIHost + path, {
         credentials: "include"
       })
       .then(async response => {
@@ -171,7 +176,7 @@ export default class FetchRequest{
     fields?: { [param in PostEndPointResponseMap[E]["params"][number]]: string | number | boolean }
   ): Promise<PostEndPointResponseMap[E]["returns"]> {
     return new Promise((resolve, reject) => {
-      fetch(this.#host + this.#parsePathWithParams(endPoint, fields ?? {}), {
+      fetch(this.#APIHost + this.#parsePathWithParams(endPoint, fields ?? {}), {
         method: "post",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -196,7 +201,7 @@ export default class FetchRequest{
     fields?: { [param in DeleteEndPointResponseMap[E]["params"][number]]: string | number | boolean }
   ): Promise<DeleteEndPointResponseMap[E]["returns"]> {
     return new Promise((resolve, reject) => {
-      fetch(this.#host + this.#parsePathWithParams(endPoint, fields ?? {}), {
+      fetch(this.#APIHost + this.#parsePathWithParams(endPoint, fields ?? {}), {
         method: "DELETE",
         credentials: "include"
       })
@@ -210,6 +215,32 @@ export default class FetchRequest{
       .catch(ex => {
         console.log(ex);
         reject("DELETE request failed");
+      });
+    });
+  }
+
+  static put<E extends keyof PutEndPointResponseMap>(
+    endPoint: E,
+    data: {},
+    fields?: { [param in PutEndPointResponseMap[E]["params"][number]]: string | number | boolean }
+  ): Promise<PutEndPointResponseMap[E]["returns"]> {
+    return new Promise((resolve, reject) => {
+      fetch(this.#APIHost + this.#parsePathWithParams(endPoint, fields ?? {}), {
+        method: "put",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data)
+      })
+      .then(async response => {
+        if(!response.ok){
+          return void reject(await response.text());
+        }
+        const object = await response.json();
+        resolve(object);
+      })
+      .catch(ex => {
+        console.log(ex);
+        reject("POST request failed");
       });
     });
   }
@@ -247,7 +278,7 @@ export default class FetchRequest{
     formData: FormData
   ): Promise<EndPointReturnType<M, U>> {
     return new Promise((resolve, reject) => {
-      fetch(this.#host + url.toString(), { method, credentials: "include", body: formData })
+      fetch(this.#APIHost + url.toString(), { method, credentials: "include", body: formData })
       .then(async response => {
         if(!response.ok){
           return void reject(await response.text());
@@ -262,9 +293,17 @@ export default class FetchRequest{
     });
   }
 
-  static putFormData(url: string, formData: FormData){
+  static putFormData<E extends keyof PutEndPointResponseMap>(
+    endPoint: E,
+    formData: FormData,
+    fields?: { [param in PutEndPointResponseMap[E]["params"][number]]: string | number | boolean }
+  ): Promise<PutEndPointResponseMap[E]["returns"]> {
     return new Promise((resolve, reject) => {
-      fetch(this.#host + url, { method: "put", body: formData })
+      fetch(this.#APIHost + this.#parsePathWithParams(endPoint, fields ?? {}), {
+        method: "put",
+        credentials: "include",
+        body: formData
+      })
       .then(async response => {
         if(!response.ok){
           return void reject(await response.text());

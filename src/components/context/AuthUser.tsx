@@ -1,15 +1,24 @@
 import { createContext, useState } from "react";
-import { UserResponse } from "../../helper/user";
+import { User, UserResponse } from "../../helper/user";
 
-const UserContext = createContext<{ userData?: UserResponse, setUserData: React.Dispatch<React.SetStateAction<UserResponse | undefined>> }>({ setUserData(){
-  console.log("default")
-} });
+const UserContext = createContext<{
+  userData?: UserResponse,
+  setUserData: React.Dispatch<React.SetStateAction<UserResponse | undefined>>,
+  updateUserData: (data: Partial<UserResponse>) => void;
+}>({
+  setUserData(){},
+  updateUserData(){}
+});
 
 function AuthUserStates(props: { children: JSX.Element }){
 
   const [ userData, setUserData ] = useState<UserResponse>();
 
-  return <UserContext.Provider value={{ userData, setUserData }}>
+  function updateUserData(data: Partial<UserResponse>){
+    setUserData(Object.assign({}, userData, data));
+  }
+
+  return <UserContext.Provider value={{ userData, setUserData, updateUserData }}>
     { props.children }
   </UserContext.Provider>
 

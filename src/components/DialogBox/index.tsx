@@ -7,8 +7,10 @@ import { OverlayProperties } from "../Overlay";
 type DialogBoxProperties = {
   children: JSX.Element | JSX.Element[];
   closeHandle: () => void;
+  headerButtons?: JSX.Element[];
   closeIcon?: "cancel" | "back"
   title?: string;
+  id?: string;
 };
 
 type OverlayComponent = React.FunctionComponentElement<OverlayProperties>;
@@ -47,14 +49,15 @@ export default function DialogBox(props: DialogBoxProperties){
   return <dialog className="container absolute w-fill h-fill overlay center">
     <div className="container dialog">
 
-      <header className="container w-fill row gap pad-500 center">
+      <header className="container w-fill row gap pad-500 between">
         <IconButton onClick={ () => props.closeHandle() }>
           { props.closeIcon === "back"? <ArrowLeft/> : <X/> }
         </IconButton>
-        { props.title ? <span>{ props.title }</span> : "" }
+        { props.title ? <h2>{ props.title }</h2> : "" }
+        { props.headerButtons }
       </header>
 
-      <div className="container h-fill center content">{ props.children }</div>
+      <div className="container h-fill center content" id={ props.id }>{ props.children }</div>
 
     </div>
   </dialog>;

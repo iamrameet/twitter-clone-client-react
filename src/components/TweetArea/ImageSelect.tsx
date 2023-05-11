@@ -63,11 +63,12 @@ export function ImageSelectProvider({ sources = [], onRemove, children }: {
   const [ images, setImages ] = useState<ImageSelectContextProperties["images"]>(sources);
 
   function addImage(...sources: string[]){
-    setImages(images.concat(sources));
+    setImages(images.concat(sources).splice(0, 4));
   }
 
   function removeImage(index: number){
-    images.splice(index, 1);
+    const [ url ] = images.splice(index, 1);
+    URL.revokeObjectURL(url);
     onRemove?.(index);
     setImages([ ...images ]);
   }

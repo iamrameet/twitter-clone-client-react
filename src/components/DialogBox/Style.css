@@ -6,9 +6,6 @@
 .dialog header{
   margin-bottom: auto;
 }
-.dialog header button.icon:first-of-type{
-  margin-right: auto;
-}
 
 .dialog .content{
   padding: 0rem 3rem;

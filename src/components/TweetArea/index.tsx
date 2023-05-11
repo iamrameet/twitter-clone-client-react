@@ -14,12 +14,14 @@ import { timeElapsed } from "../../scripts/helper";
 import { OnlyReqUser, TweetPostUser } from "../TweetPost";
 import ImageSelect, { ImageSelectContext, ImageSelectProvider } from "./ImageSelect";
 import { CompositeDecorator, ContentBlock, ContentState, Editor, EditorState, Modifier, SelectionState } from "draft-js";
+import { UserContext } from "../context/AuthUser";
 
 type TweetAreaProperties = {
   tweetRef?: { tweet: Tweet, user: TweetPostUser };
   onTweet?: (tweet: Tweet) => void;
   onOverlay?: (overlay: JSX.Element, index?: number) => number;
   onOverlayRemove?: (index: number) => void;
+  toggleTweetDialog?: (value: boolean) => void;
 };
 // Note: these aren't very good regexes, don't use them!
 const HANDLE_REGEX = /\@[\w]+/g;
@@ -70,10 +72,12 @@ export default function TweetArea(props: TweetAreaProperties){
     },
   ]);
 
+  const { userData } = useContext(UserContext);
+
   const [ editorState, setEditorState ] = useState(() => EditorState.createEmpty(compositeDecorator));
   const [ tweetContent, setTweetContent ] = useState("");
   const [ tweetStatus, setTweetStatus ] = useState<"posting" | "default">("default");
-  const { images, addImages } = useContext(ImageSelectContext);
+  const { addImages } = useContext(ImageSelectContext);
   const [ files, setFiles ] = useState<File[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -83,6 +87,11 @@ export default function TweetArea(props: TweetAreaProperties){
   const [ usersSuggestion, setUsersSuggestion ] = useState<User[]>([]);
 
   function onImageRemove(index: number){}
+
+  useEffect(function(){
+    const sources = files.map(file => URL.createObjectURL(file));
+    addImages(...sources);
+  }, [ files ]);
 
   useEffect(function(){
     const selection = editorState.getSelection();
@@ -132,7 +141,7 @@ export default function TweetArea(props: TweetAreaProperties){
         <div className="container w-fill row gap">
 
           <div className="container h-fill center gap">
-            <div className="container image"></div>
+            <div className="container image" style={{ backgroundImage: `url("${ props.tweetRef.user.image }")` }}></div>
             <div className="line-v"></div>
           </div>
 
@@ -157,7 +166,7 @@ export default function TweetArea(props: TweetAreaProperties){
     <div className="container w-fill row">
 
       <div className="container h-fill">
-        <div className="container image"></div>
+        <div className="container image" style={{ backgroundImage: `url("${ userData?.image }")` }}></div>
       </div>
 
       <div className="container gap right-side">
@@ -222,8 +231,6 @@ export default function TweetArea(props: TweetAreaProperties){
             hidden={ true }
             onChange={ ({ currentTarget }) => {
               setFiles(Array.from(currentTarget.files ?? []));
-              const sources = files.map(file => URL.createObjectURL(file));
-              addImages(...sources);
             } }
           />
           <IconButton
@@ -242,7 +249,7 @@ export default function TweetArea(props: TweetAreaProperties){
             + (tweetContent.length === 0 || tweetContent.length >= 290 ? " no-outline" : "")
             + (tweetContent.length >= 280 ? " error" : tweetContent.length >= 260 ? " warn" : "")
           }>
-            { tweetContent.length >= 290 ? (290 - tweetContent.length) : tweetContent.length >= 260 ? 20 - (tweetContent.length - 260) : "" }
+            { tweetContent.length >= 280 ? (280 - tweetContent.length) : tweetContent.length >= 260 ? 20 - (tweetContent.length - 260) : "" }
             <svg height="100%" viewBox="0 0 20 20" width="100%" style={{
               overflow: "visible",
               position: "absolute"
@@ -260,7 +267,7 @@ export default function TweetArea(props: TweetAreaProperties){
           <hr/>
           <Button
             emphasis="high"
-            disabled={ tweetStatus === "posting" || (tweetContent.length === 0 && files.length === 0) }
+            disabled={ tweetStatus === "posting" || (tweetContent.length === 0 && files.length === 0) || tweetContent.length > 280 }
             onClick={
               async () => {
                 setTweetStatus("posting");
@@ -285,10 +292,7 @@ export default function TweetArea(props: TweetAreaProperties){
                   setTweetContent("");
                   setEditorState(EditorState.createEmpty(compositeDecorator));
                   setFiles([]);
-                  images
-                  if(overlayIndex){
-                    props.onOverlayRemove?.(overlayIndex);
-                  }
+                  props.toggleTweetDialog?.(false);
                 } catch(error) {
                   console.log(error)
                 }

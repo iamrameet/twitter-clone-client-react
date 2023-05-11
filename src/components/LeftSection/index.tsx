@@ -1,11 +1,12 @@
-import { Bell, Bookmark, BookmarkSimple, Bookmarks, BookmarksSimple, Gear, Hash, House, MagnifyingGlass, TwitchLogo, TwitterLogo, User } from "@phosphor-icons/react";
+import { Bell, Bookmark, BookmarkSimple, Bookmarks, BookmarksSimple, Gear, Hash, House, MagnifyingGlass, SignOut, TwitchLogo, TwitterLogo, User } from "@phosphor-icons/react";
 import Icon from "../Icon";
 import { Icon as PhosphorIcon } from "@phosphor-icons/react/dist/lib";
 import "./LeftSection.css";
 import Button from "../Button";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/AuthUser";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import FetchRequest from "../../scripts/fetch-request";
 
 type LeftSectionProps = {
   navIndex?: string;
@@ -26,7 +27,6 @@ type NavListItemProperties = {
   id: string;
   children: JSX.Element;
   text: string;
-  navState: [string, React.Dispatch<React.SetStateAction<string>>];
 };
 
 function NavItem(props: NavItemProperties){
@@ -49,14 +49,15 @@ function NavItem(props: NavItemProperties){
 
 function NavListItem(props: NavListItemProperties){
 
-  // const location = useLocation();
+  const location = useLocation();
   const navigate = useNavigate();
+  const id = "/" + props.id;
 
   return <NavItem
     id={ props.id }
     text={ props.text }
-    isActive= { props.navState[0] === props.id }
-    onClick={ () => navigate("/" + props.id) }
+    isActive= { location.pathname === id }
+    onClick={ () => navigate(id) }
   >
     { props.children }
   </NavItem>
@@ -65,16 +66,10 @@ function NavListItem(props: NavListItemProperties){
 
 export default function LeftSection(props: LeftSectionProps){
 
-  const { userData } = useContext(UserContext);
-  const navState = useState(props.navIndex ?? "explore");
-  const [ navId ] = navState;
-
-  useEffect(() => {
-    props.onNavIdChange?.(navId);
-  }, [ navId ]);
+  const { userData, setUserData } = useContext(UserContext);
 
   return <section className="container left-section">
-    <div className="container w-fill items">
+    <div className="container w-fill h-fill items">
 
       <NavItem id="" iconWeight="fill">
         <TwitterLogo/>
@@ -82,32 +77,32 @@ export default function LeftSection(props: LeftSectionProps){
 
       {
         userData ?
-          <NavListItem navState={ navState } id="home" text="Home">
+          <NavListItem id="home" text="Home">
             <House/>
           </NavListItem>
         : <></>
       }
 
-      <NavListItem navState={ navState } id="explore" text="Explore">
+      <NavListItem id="explore" text="Explore">
         <Hash/>
       </NavListItem>
 
       {
         userData ?
-          <NavListItem navState={ navState } id='notifications' text="Notifications">
+          <NavListItem id='notifications' text="Notifications">
             <Bell/>
           </NavListItem>
         : <></>
       }
 
-      <NavListItem navState={ navState } id="search" text="Search">
+      <NavListItem id="search" text="Search">
         <MagnifyingGlass/>
       </NavListItem>
 
       {
         userData ? <>
 
-          <NavListItem navState={ navState } id="profile" text="Profile">
+          <NavListItem id="profile" text="Profile">
             <User/>
           </NavListItem>
 
@@ -129,6 +124,20 @@ export default function LeftSection(props: LeftSectionProps){
             </Button>
 
           </div>
+
+          <NavItem
+            id="logout"
+            text="Logout"
+            onClick={
+              async () => {
+                FetchRequest.delete("/user/logout");
+                setUserData(undefined);
+              }
+            }
+          >
+            <SignOut/>
+          </NavItem>
+
         </> : <></>
       }
 

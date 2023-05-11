@@ -1,4 +1,5 @@
 import FetchRequest from "./fetch-request";
+import { DEFAULT_IMAGE } from "./user";
 import { sleep } from "./util";
 
 export type MappedTweet = Awaited<ReturnType<typeof getTweets>>[number];
@@ -23,7 +24,7 @@ export async function getTweets(userId: number, limit: number, skip: number = 0)
         id: tweet.user_id,
         name: tweet.name,
         username: tweet.username,
-        image: tweet.image
+        image: tweet.image ? FetchRequest.host + tweet.image.replaceAll("\\", "/") : DEFAULT_IMAGE
       }
     };
 
@@ -52,7 +53,7 @@ export async function getReplies(userId: number, limit: number, skip: number = 0
         id: tweet.user_id,
         name: tweet.name,
         username: tweet.username,
-        image: tweet.image
+        image: tweet.image ? FetchRequest.host + tweet.image.replaceAll("\\", "/") : DEFAULT_IMAGE
       },
       ref: {
         id: tweet.ref_id,
@@ -89,7 +90,7 @@ export async function getLikes(userId: number, limit: number, skip: number = 0) 
         id: tweet.user_id,
         name: tweet.name,
         username: tweet.username,
-        image: tweet.image
+        image: tweet.image ? FetchRequest.host + tweet.image.replaceAll("\\", "/") : DEFAULT_IMAGE
       },
       ref: tweet.ref_id ? {
         id: tweet.ref_id,
@@ -137,7 +138,7 @@ export async function searchTweets(q: string, options: TweetSearchOptions){
         id: tweet.user_id,
         name: tweet.name,
         username: tweet.username,
-        image: tweet.image
+        image: tweet.image ? FetchRequest.host + tweet.image.replaceAll("\\", "/") : DEFAULT_IMAGE
       }
     };
   });
@@ -166,7 +167,7 @@ export async function getTweetsUpdate(options: { limit: number; skip?: number; }
         id: tweet.user_id,
         name: tweet.name,
         username: tweet.username,
-        image: tweet.image
+        image: tweet.image ? FetchRequest.host + tweet.image.replaceAll("\\", "/") : DEFAULT_IMAGE
       }
     };
   });

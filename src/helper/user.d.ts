@@ -7,6 +7,10 @@ export type UserResponse = {
 	username: string;
 	createdAt: string;
   image?: string;
+  cover?: string;
+  bio: string;
+  location: string;
+  website: string;
 	tweetCount: number;
 	followerCount: number;
 	followingCount: number;
@@ -20,6 +24,7 @@ export type UserSearchResponse = {
 	username: string;
 	createdAt: string;
   image?: string;
+  cover?: string;
   recentTweet?: { content: string };
   isFollowing: boolean;
 };
@@ -108,8 +113,10 @@ declare const userController: {
       field: "image" | "username" | "email" | "password";
       value: string;
     };
+    "/update"(): { [fieldName in Exclude<keyof UserResponse, "id">]: UserResponse[fieldName] }
   };
   delete: {
+    "/logout"(): boolean;
     "/:userId/unfollow"(): boolean;
   };
 };

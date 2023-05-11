@@ -121,6 +121,11 @@ button:disabled{
   text-decoration: none;
   cursor: pointer;
 }
+.link-parent{
+  color: inherit;
+  text-decoration: none;
+}
+.link-parent:hover .link,
 .link:hover{
   text-decoration: underline;
 }
@@ -168,6 +173,7 @@ button:disabled{
 }
 
 .container.gap{ gap: 1rem; }
+.container.gap-100{ gap: 0.1rem; }
 .container.gap-250{ gap: 0.25rem; }
 .container.gap-500{ gap: 0.5rem; }
 
@@ -180,6 +186,9 @@ button:disabled{
 .container.center{
   justify-content: center;
   align-items: center;
+}
+.container.between{
+  justify-content: space-between;
 }
 .container.row.center-v,
 .container.col.center-h{ align-items: center; }

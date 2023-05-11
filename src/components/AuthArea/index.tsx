@@ -3,10 +3,12 @@ import FetchRequest from "../../scripts/fetch-request";
 import Button from "../Button";
 import DialogBox, { DialogBoxProperties } from "../DialogBox";
 import "./Style.css";
+import { UserResponse } from "../../helper/user";
+import { DEFAULT_IMAGE } from "../../scripts/user";
 
 type AuthAreaProperties = {
   closeHandle: DialogBoxProperties["closeHandle"];
-  onSuccess: (userData: {}, token: string) => void
+  onSuccess: (userData: UserResponse, token: string) => void;
 };
 
 export default function AuthArea(props: AuthAreaProperties){
@@ -68,11 +70,14 @@ export default function AuthArea(props: AuthAreaProperties){
               setAuthState("pending");
               await sleep(1000);
               try{
-                const data = await FetchRequest.post("/user/auth", {
+                const { userData, token } = await FetchRequest.post("/user/auth", {
                   email: userEmail,
                   password: userPassword
                 });
-                props.onSuccess(data.userData, data.token);
+                userData.image = userData.image ? FetchRequest.host + userData.image : DEFAULT_IMAGE;
+                userData.cover = userData.cover ? FetchRequest.host + userData.cover : undefined;
+
+                props.onSuccess(userData, token);
               } catch(ex) {} finally {
                 setAuthState("default");
               }
@@ -245,7 +250,7 @@ export function SignupArea(props: AuthAreaProperties){
         isMono={ step !== 2 }
         onClick={
           step === 4 ? async () => {
-            const data = await signup(
+            const { userData, token } = await signup(
               verificationOTP,
               verificationKey,
               userName,
@@ -253,7 +258,9 @@ export function SignupArea(props: AuthAreaProperties){
               `${ birthYear }-${ birthMonth.padStart(2, "0") }-${ birthDay.padStart(2, "0") }`,
               userPassword
             );
-            props.onSuccess(data.userData, data.token);
+            userData.image = userData.image ? FetchRequest.host + userData.image : DEFAULT_IMAGE;
+            userData.cover = userData.cover ? FetchRequest.host + userData.cover : undefined;
+            props.onSuccess(userData, token);
           } : step === 3 ? async () => {
               setAuthState("pending");
               await sleep(1000);

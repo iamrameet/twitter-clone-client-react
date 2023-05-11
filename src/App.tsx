@@ -22,6 +22,7 @@ import { Outlet, RouterProvider, createBrowserRouter } from 'react-router-dom'
 import HomeSection from './components/MainSection/HomeSection'
 import NotificationsSection from './components/MainSection/NotificationsSection'
 import ExploreSection from './components/MainSection/ExploreSection'
+import { DEFAULT_IMAGE } from './scripts/user'
 
 const pageMap: SectionId[] = [ "home", "explore", "notifications", "search", "profile" ];
 
@@ -59,11 +60,21 @@ function App() {
       <AuthNavigation onButtonClick={ type => setAuthArea(type) }/>
       { authAreaType === "login" ? <AuthArea
         closeHandle={ () => void setAuthArea("none") }
-        onSuccess={ () => setAuthState("success") }
+        onSuccess={
+          userData => {
+            setAuthState("success");
+            setUserData(userData);
+          }
+        }
       />
         : authAreaType === "signup" ? <SignupArea
           closeHandle={ () => void setAuthArea("none") }
-          onSuccess={ () => setAuthState("success") }
+          onSuccess={
+            userData => {
+              setAuthState("success");
+              setUserData(userData);
+            }
+          }
         /> : "" }
     </> : authState === "success" ?
         <>
@@ -85,6 +96,7 @@ function App() {
                     onTweet={ addTweet }
                     onOverlay={ addOverlay }
                     onOverlayRemove={ removeOverlay }
+                    toggleTweetDialog={ toggleTweetDialog }
                     tweetRef={ tweetRef }
                   ></TweetArea>
                 </ImageSelectProvider>
@@ -153,7 +165,7 @@ function App() {
       isLiked: tweet.isLiked ?? false,
       isRetweeted: tweet.isRetweeted ?? false,
       retweetOfId: tweet.retweetOfId,
-      user: { ...userData, image: userData.image }
+      user: { ...userData, image: userData.image ?? DEFAULT_IMAGE }
     }, ...tweets ]);
   }
 
@@ -173,7 +185,10 @@ function App() {
   useEffect(() => {
     void async function(){
       try{
-        setUserData(await FetchRequest.get("/user/"));
+        const user = await FetchRequest.get("/user/");
+        user.image = user.image ? FetchRequest.host + user.image.replaceAll("\\","/") : DEFAULT_IMAGE;
+        user.cover = user.cover ? FetchRequest.host + user.cover.replaceAll("\\","/") : undefined;
+        setUserData(user);
         setAuthState("success");
       } catch(ex) {
         setAuthState("failed");

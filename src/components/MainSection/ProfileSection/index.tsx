@@ -1,21 +1,24 @@
-import { ArrowLeft } from "@phosphor-icons/react";
+import { ArrowLeft, Calendar, LinkSimple, MapPin } from "@phosphor-icons/react";
 import IconButton from "../../IconButton";
 import TweetArea from "../../TweetArea";
 import "./Style.css";
 import Button from "../../Button";
 import VerifiedSVG from "../../VerifiedSVG";
 import Icon from "../../Icon";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Tweet } from "../../../helper/tweet";
 import TweetPost, { OnlyReqUser, TweetContentProperties } from "../../TweetPost";
 import { MappedTweet, getLikes, getReplies, getTweets } from "../../../scripts/tweets";
-import { getUser } from "../../../scripts/user";
+import { getUser, updateUser } from "../../../scripts/user";
 import { UserResponse } from "../../../helper/user";
 import { sleep } from "../../../scripts/util";
 import { UserContext } from "../../context/AuthUser";
 import { PaginatorContext } from "../../Paginator";
 import FetchRequest from "../../../scripts/fetch-request";
+import DialogBox, { OverlayContext } from "../../DialogBox";
+import Input, { FileInput } from "../../Input";
+import { EditProfileDialog } from "./EditProfileDialog";
 
 
 type UserPSProperties = {
@@ -45,10 +48,10 @@ function NavLink(props: NavLinkProperties){
 export default function ProfileSection(props: Properties){
 
   const { userData } = useContext(UserContext);
+  const overlay = useContext(OverlayContext);
   const { limit = 10, skip = 0, resolved, setResolver } = useContext(PaginatorContext);
   console.log({ limit, skip, resolved })
 
-  const [ isFollowing, toggleFollow ] = useState(false);
   const [ tweets, setTweets ] = useState(props.tweets ?? []);
   const [ replies, setReplies ] = useState<Awaited<ReturnType<typeof getReplies>>>([]);
   const [ likes, setLikes ] = useState<Awaited<ReturnType<typeof getLikes>>>([]);
@@ -116,13 +119,18 @@ export default function ProfileSection(props: Properties){
 
     <div className="container w-fill profile-details">
 
-      <div className="container w-fill cover"></div>
+      <div className="container w-fill cover" style={{ backgroundImage: `url("${ userData.cover }")` }}></div>
       <div className="container row pad">
-        <img className="container image" src={ userData.image ?? "https://pbs.twimg.com/profile_images/1605297940242669568/q8-vPggS_400x400.jpg" }/>
+        <img className="container image" src={ userData.image }/>
         <div className="container buttons">
           <Button
             emphasis="low"
             isMono={ true }
+            onClick={
+              () => {
+                overlay.openHandle(<EditProfileDialog closeHandle={ overlay.closeHandle }/>);
+              }
+            }
           >Edit Profile</Button>
         </div>
       </div>
@@ -133,6 +141,47 @@ export default function ProfileSection(props: Properties){
           <Icon><VerifiedSVG/></Icon>
         </h2>
         <p className="text sub-title">@{ userData.username }</p>
+
+        <br/>
+
+        {
+          userData.bio ?
+            <div className="container row gap-500">{ userData.bio }</div>
+          : <></>
+        }
+
+        <br/>
+
+        <div className="container row gap-500 text sub-title">
+        {
+          userData.location ?
+            <div className="container row gap-100">
+              <Icon><MapPin/></Icon>
+              <span>{ userData.location }</span>
+            </div>
+          : <></>
+        }
+        {
+          userData.website ?
+            <div className="container row gap-100">
+              <Icon><LinkSimple/></Icon>
+              <a href={ userData.website } className="link">{ userData.website }</a>
+            </div>
+          : <></>
+        }
+          <div className="container row gap-100">
+            <Icon><Calendar/></Icon>
+            <span>Joined {
+              (() => {
+                const date = new Date(userData.createdAt);
+                return date.toLocaleDateString("en-IN", { month: "long", year: "numeric" });
+              })()
+            }</span>
+          </div>
+
+        </div>
+
+
         <br/>
         <div className="container row gap">
           <p> <b>{ userData.followerCount }</b> <span className="text sub-title">Followers</span> </p>
@@ -275,7 +324,7 @@ export function UserProfileSection(props: UserPSProperties){
 
       <div className="container w-fill cover"></div>
       <div className="container row pad">
-        <img className="container image" src={ user.image ?? "https://pbs.twimg.com/profile_images/1605297940242669568/q8-vPggS_400x400.jpg"}/>
+        <img className="container image" src={ user.image ?? "https://abs.twimg.com/sticky/default_profile_images/default_profile_400x400.png"}/>
         <div className="container buttons">
             <Button
               emphasis={ isFollowedBy ? "medium" : "high" }
